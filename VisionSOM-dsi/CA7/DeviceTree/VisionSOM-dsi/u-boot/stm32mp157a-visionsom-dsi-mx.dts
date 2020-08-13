@@ -17,6 +17,12 @@
 
 #include <dt-bindings/rtc/rtc-stm32.h>
 
+#include "stm32mp157.dtsi"
+#include "stm32mp15xa.dtsi"
+#include "stm32mp15-pinctrl.dtsi"
+#include "stm32mp15xxab-pinctrl.dtsi"
+#include "stm32mp157-m4-srm.dtsi"
+
 /* USER CODE END includes */
 
 / {
@@ -113,6 +119,7 @@
 	        regulator-max-microvolt = <5000000>;
 		gpio = <&gpiod 13 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
+		regulator-always-on;
 	};
 
 	vdd: regulator_vdd {
@@ -796,7 +803,8 @@
 	/* USER CODE BEGIN uart7 */
 
 	u-boot,dm-pre-reloc;
-	st,hw-flow-ctrl;
+	uart-has-rtscts;
+
 	bluetooth {
 		shutdown-gpios = <&gpioe 9 GPIO_ACTIVE_HIGH>;
 		compatible = "brcm,bcm43438-bt";
@@ -813,7 +821,6 @@
 
 	phys = <&usbphyc_port0>;
 	phy-names = "usb";
-	vbus-supply = <&vbus_sw>;
 
 	/* USER CODE END usbh_ehci */
 };
@@ -825,7 +832,6 @@
 
 	phys = <&usbphyc_port0>;
 	phy-names = "usb";
-	vbus-supply = <&vbus_sw>;
 
 	/* USER CODE END usbh_ohci */
 };
@@ -850,9 +856,6 @@
 	status = "okay";
 
 	/* USER CODE BEGIN usbphyc */
-
-	vdd3v3-supply = <&vdd>;
-
 	/* USER CODE END usbphyc */
 };
 

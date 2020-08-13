@@ -15,6 +15,10 @@
 #include "stm32mp15-ddr.dtsi"
 
 /* USER CODE BEGIN includes */
+
+#include "stm32mp15-u-boot.dtsi"
+#include "stm32mp15-ddr.dtsi"
+
 /* USER CODE END includes */
 
 / {

@@ -17,6 +17,12 @@
 
 #include <dt-bindings/rtc/rtc-stm32.h>
 
+#include "stm32mp157.dtsi"
+#include "stm32mp15xa.dtsi"
+#include "stm32mp15-pinctrl.dtsi"
+#include "stm32mp15xxab-pinctrl.dtsi"
+#include "stm32mp157-m4-srm.dtsi"
+
 /* USER CODE END includes */
 
 / {
@@ -37,10 +43,10 @@
 
 		/* USER CODE BEGIN reserved-memory */
 
-                fb_reserved: fb@fd000000 {
-                        reg = <0xfd000000 0x8000000>;
-                        no-map;
-                };
+		fb_reserved: fb@fd000000 {
+			reg = <0xfd000000 0x8000000>;
+			no-map;
+		};
 
 		/* USER CODE END reserved-memory */
 
@@ -96,15 +102,33 @@
 	};
 
 	panel {
-		compatible = "powertip,ph800480t013-ibc17", "simple-panel";
+		status = "okay";
+		u-boot,dm-pre-reloc;
+		compatible = "simple-panel";
 		backlight = <&backlight>;
-		port {
-			panel_in: endpoint {
-				remote-endpoint = <&ltdc_out_rgb>;
+                power-supply = <&vdd>;
+		enable-gpios = <&gpioa 1 GPIO_ACTIVE_LOW>;
+
+		display-timings {
+                        timing0: timing0 {
+		                clock-frequency = <33300000>;
+	                        hactive = <800>;
+	                        vactive = <480>;
+	                        hfront-porch = <210>;
+	                        hback-porch = <46>;
+	                        hsync-len = <46>;
+	                        vback-porch = <23>;
+	                        vfront-porch = <22>;
+	                        vsync-len = <23>;
+	                        hsync-active = <0>;
+	                        vsync-active = <0>;
+	                        de-active = <0>;
+	                        pixelclk-active = <1>;
+
 			};
 		};
 	};
-	
+
 	usb_phy_tuning: usb-phy-tuning {
 		st,hs-dc-level = <2>;
 		st,fs-rftime-tuning;
@@ -123,6 +147,7 @@
 	        regulator-max-microvolt = <5000000>;
 		gpio = <&gpiod 13 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
+		regulator-always-on;
 	};
 
 	vdd: regulator_vdd {
@@ -683,11 +708,7 @@
 
 	/* USER CODE BEGIN ltdc */
 
-	port {
-		ltdc_out_rgb: endpoint {
-			remote-endpoint = <&panel_in>;
-		};
-	};
+	u-boot,dm-pre-reloc;
 
 	/* USER CODE END ltdc */
 };
@@ -793,7 +814,7 @@
 
 	/* USER CODE END timers1 */
 
-	pwm{
+	pwm1: pwm{
 		pinctrl-names = "default", "sleep";
 		pinctrl-0 = <&tim1_pwm_pins_mx>;
 		pinctrl-1 = <&tim1_pwm_sleep_pins_mx>;
@@ -824,7 +845,8 @@
 	/* USER CODE BEGIN uart7 */
 
 	u-boot,dm-pre-reloc;
-	st,hw-flow-ctrl;
+	uart-has-rtscts;
+
 	bluetooth {
 		shutdown-gpios = <&gpioe 9 GPIO_ACTIVE_HIGH>;
 		compatible = "brcm,bcm43438-bt";
@@ -841,7 +863,6 @@
 
 	phys = <&usbphyc_port0>;
 	phy-names = "usb";
-	vbus-supply = <&vbus_sw>;
 
 	/* USER CODE END usbh_ehci */
 };
@@ -853,7 +874,6 @@
 
 	phys = <&usbphyc_port0>;
 	phy-names = "usb";
-	vbus-supply = <&vbus_sw>;
 
 	/* USER CODE END usbh_ohci */
 };
@@ -878,9 +898,6 @@
 	status = "okay";
 
 	/* USER CODE BEGIN usbphyc */
-
-	vdd3v3-supply = <&vdd>;
-
 	/* USER CODE END usbphyc */
 };
 

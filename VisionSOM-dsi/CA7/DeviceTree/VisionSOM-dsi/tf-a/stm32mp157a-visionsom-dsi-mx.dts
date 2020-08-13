@@ -19,7 +19,16 @@
 
 /* USER CODE BEGIN includes */
 
+#include <dt-bindings/clock/stm32mp1-clksrc.h>
 #include <dt-bindings/power/stm32mp1-power.h>
+#include <dt-bindings/soc/st,stm32-etzpc.h>
+
+#include "stm32mp157.dtsi"
+#include "stm32mp15xa.dtsi"
+#include "stm32mp15-pinctrl.dtsi"
+#include "stm32mp15xxab-pinctrl.dtsi"
+#include "stm32mp15-mx.dtsi"
+#include "stm32mp15-ddr.dtsi"
 
 /* USER CODE END includes */
 
@@ -30,16 +39,6 @@
 	/* USER CODE BEGIN root */
 
         aliases {
-                gpio0 = &gpioa;
-                gpio1 = &gpiob;
-                gpio2 = &gpioc;
-                gpio3 = &gpiod;
-                gpio4 = &gpioe;
-                gpio5 = &gpiof;
-                gpio6 = &gpiog;
-                gpio7 = &gpioh;
-                gpio8 = &gpioi;
-                gpio25 = &gpioz;
                 serial0 = &uart4;
 		mmc0 = &sdmmc1;
 		mmc1 = &sdmmc2;
@@ -314,25 +313,28 @@
 /* USER CODE BEGIN addons */
 
 &nvmem_layout {
-        nvmem-cells =<&part_number_otp>,
+        nvmem-cells = <&cfg0_otp>,
+                      <&part_number_otp>,
                       <&monotonic_otp>,
                       <&nand_otp>,
                       <&uid_otp>,
                       <&package_otp>,
                       <&hw2_otp>,
+                      <&pkh_otp>,
                       <&board_id>;
 
-        nvmem-cell-names = "part_number_otp",
+        nvmem-cell-names = "cfg0_otp",
+                           "part_number_otp",
                            "monotonic_otp",
                            "nand_otp",
                            "uid_otp",
                            "package_otp",
                            "hw2_otp",
+                           "pkh_otp",
                            "board_id";
 };
 
-
-&pwr {
+&pwr_regulators {
         system_suspend_supported_soc_modes = <
                 STM32_PM_CSLEEP_RUN
                 STM32_PM_CSTOP_ALLOW_LP_STOP
