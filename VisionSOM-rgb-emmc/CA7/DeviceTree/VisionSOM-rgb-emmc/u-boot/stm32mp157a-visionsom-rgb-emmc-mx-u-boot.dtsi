@@ -30,6 +30,10 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+        config {
+                u-boot,mmc-env-partition = "fip";
+        };
+
 	panel {
                 display-timings {
                         timing0: timing0 {

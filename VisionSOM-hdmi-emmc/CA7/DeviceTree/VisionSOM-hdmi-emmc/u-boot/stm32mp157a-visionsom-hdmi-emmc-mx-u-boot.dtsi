@@ -31,6 +31,10 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+        config {
+                u-boot,mmc-env-partition = "fip";
+        };
+
 	/* USER CODE END root */
 
 	clocks {
